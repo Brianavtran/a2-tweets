@@ -42,6 +42,54 @@ function parseTweets(runkeeper_tweets) {
     // Update the HTML with the earliest and latest dates
     document.getElementById('firstDate').innerText = firstDate;
     document.getElementById('lastDate').innerText = lastDate;
+    // Count the tweets in each category
+    let completedCount = 0;
+    let liveCount = 0;
+    let achievementCount = 0;
+    let miscellaneousCount = 0;
+
+    for (let tweet of tweet_array) {
+        if (tweet.source === "completed_event") {
+            completedCount++;
+        } else if (tweet.source === "live_event") {
+            liveCount++;
+        } else if (tweet.source === "achievement") {
+            achievementCount++;
+        } else {
+            miscellaneousCount++;
+        }
+    }
+
+    // Calculate the percentage of each category
+    let totalTweets = tweet_array.length;
+
+    let completedPercent = (completedCount / totalTweets * 100).toFixed(2);
+    let livePercent = (liveCount / totalTweets * 100).toFixed(2);
+    let achievementPercent = (achievementCount / totalTweets * 100).toFixed(2);
+    let miscellaneousPercent = (miscellaneousCount / totalTweets * 100).toFixed(2);
+
+    // Display the number of tweets in each category
+    document.querySelectorAll('.completedEvents').forEach(function(element) {
+        element.innerText = completedCount;
+    });
+
+    document.querySelector('.liveEvents').innerText = liveCount;
+    document.querySelector('.achievements').innerText = achievementCount;
+    document.querySelector('.miscellaneous').innerText = miscellaneousCount;
+
+    // Display the percentages
+    document.querySelector('.completedEventsPct').innerText = completedPercent + '%';
+    document.querySelector('.liveEventsPct').innerText = livePercent + '%';
+    document.querySelector('.achievementsPct').innerText = achievementPercent + '%';
+    document.querySelector('.miscellaneousPct').innerText = miscellaneousPercent + '%';
+
+    // Print the counts to the console for testing
+    console.log("Completed:", completedCount);
+    console.log("Live:", liveCount);
+    console.log("Achievements:", achievementCount);
+    console.log("Miscellaneous:", miscellaneousCount);
+
+    console.log("Total:", completedCount + liveCount + achievementCount + miscellaneousCount);
 }
 
 //Wait for the DOM to load
