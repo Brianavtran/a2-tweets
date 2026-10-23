@@ -42,6 +42,7 @@ function parseTweets(runkeeper_tweets) {
     // Update the HTML with the earliest and latest dates
     document.getElementById('firstDate').innerText = firstDate;
     document.getElementById('lastDate').innerText = lastDate;
+
     // Count the tweets in each category
     let completedCount = 0;
     let liveCount = 0;
@@ -90,9 +91,26 @@ function parseTweets(runkeeper_tweets) {
     console.log("Miscellaneous:", miscellaneousCount);
 
     console.log("Total:", completedCount + liveCount + achievementCount + miscellaneousCount);
+
+    // Count completed events containing user-written text
+    let writtenCount = 0;
+
+    for (let tweet of tweet_array) {
+        if (tweet.source === "completed_event" && tweet.written) {
+            writtenCount++;
+        }
+    }
+
+    // Calculate percentage of completed events with written text
+    let writtenPercent = (writtenCount / completedCount * 100).toFixed(2);
+
+    // Update the HTML
+    document.querySelector('.written').innerText = writtenCount;
+    document.querySelector('.writtenPct').innerText = writtenPercent + '%';
 }
 
 //Wait for the DOM to load
 document.addEventListener('DOMContentLoaded', function (event) {
     loadSavedRunkeeperTweets().then(parseTweets);
 });
+
