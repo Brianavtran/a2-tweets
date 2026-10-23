@@ -59,11 +59,20 @@ class Tweet {
     }
 
     get activityType():string {
-        if (this.source != 'completed_event') {
-            return "unknown";
+    if (this.source != 'completed_event') {
+        return "unknown";
+    }
+
+    // Split the tweet into words
+    let words = this.text.split(" ");
+
+    // Look for the distance unit
+    for (let i = 0; i < words.length; i++) {
+        if (words[i].toLowerCase() === "km" ||
+            words[i].toLowerCase() === "mi") {
+
+            return words[i + 1].toLowerCase();
         }
-        //TODO: parse the activity type from the text of the tweet
-        return "";
     }
 
     get distance():number {
