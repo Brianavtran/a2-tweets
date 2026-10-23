@@ -33,16 +33,29 @@ class Tweet {
 
     //returns a boolean, whether the text includes any content written by the person tweeting.
     get written():boolean {
-        //TODO: identify whether the tweet is written
-        return false;
+        return this.writtenText.length > 0;
     }
 
     get writtenText():string {
-        if(!this.written) {
+        let dashIndex = this.text.indexOf(" - ");
+
+        if (dashIndex === -1) {
             return "";
         }
-        //TODO: parse the written text from the tweet
-        return "";
+
+        // Get everything after the dash
+        let comment = this.text.substring(dashIndex + 3);
+
+        // Remove the tweet link
+        comment = comment.replace(/https?:\/\/\S+/g, "");
+
+        // Remove the RunKeeper hashtag
+        comment = comment.replace(/#Runkeeper/gi, "");
+
+        // Remove common automatically generated text
+        comment = comment.replace(/TomTom MySports Watch/gi, "");
+
+        return comment.trim();
     }
 
     get activityType():string {
