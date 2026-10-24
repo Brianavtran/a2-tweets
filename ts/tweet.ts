@@ -76,12 +76,36 @@ class Tweet {
     }
 
     get distance():number {
-        if(this.source != 'completed_event') {
-            return 0;
-        }
-        //TODO: prase the distance from the text of the tweet
+    if (this.source != 'completed_event') {
         return 0;
     }
+
+    // Split the tweet into words
+    let words = this.text.split(" ");
+
+    // Look for the distance unit
+    for (let i = 0; i < words.length; i++) {
+        let unit = words[i].toLowerCase();
+
+        if (unit === "km" || unit === "mi") {
+            let distance = parseFloat(words[i - 1]);
+
+            // Check if the distance is a valid number
+            if (isNaN(distance)) {
+                return 0;
+            }
+
+            // Convert kilometers to miles
+            if (unit === "km") {
+                distance = distance / 1.609;
+            }
+
+            return distance;
+        }
+    }
+
+    return 0;
+}
 
     getHTMLTableRow(rowNumber:number):string {
         //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
