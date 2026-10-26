@@ -37,6 +37,7 @@ class Tweet {
     }
 
     get writtenText():string {
+
         let dashIndex = this.text.indexOf(" - ");
 
         if (dashIndex === -1) {
@@ -63,17 +64,18 @@ class Tweet {
         return "unknown";
     }
 
-    // Split the tweet into words
     let words = this.text.split(" ");
 
-    // Look for the distance unit
-    for (let i = 0; i < words.length; i++) {
+    for (let i = 0; i < words.length - 1; i++) {
         if (words[i].toLowerCase() === "km" ||
             words[i].toLowerCase() === "mi") {
 
             return words[i + 1].toLowerCase();
         }
     }
+
+    return "unknown";
+}
 
     get distance():number {
     if (this.source != 'completed_event') {
@@ -107,7 +109,8 @@ class Tweet {
     return 0;
 }
 
-    getHTMLTableRow(rowNumber:number):string {
+
+getHTMLTableRow(rowNumber:number):string {
     //I used ChatGPT to help me on this one
 
     // Find the link in the tweet
