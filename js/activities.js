@@ -10,19 +10,78 @@ function parseTweets(runkeeper_tweets) {
 	});
 
 	//TODO: create a new array or manipulate tweet_array to create a graph of the number of tweets containing each type of activity.
+	
+    // Count each completed activity type
+    let activityCounts = {};
 
-	activity_vis_spec = {
-	  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-	  "description": "A graph of the number of Tweets containing each type of activity.",
-	  "data": {
-	    "values": tweet_array
-	  }
-	  //TODO: Add mark and encoding
-	};
-	vegaEmbed('#activityVis', activity_vis_spec, {actions:false});
+    for (let tweet of tweet_array) {
+        if (tweet.source === "completed_event") {
+            let activity = tweet.activityType;
 
-	//TODO: create the visualizations which group the three most-tweeted activities by the day of the week.
-	//Use those visualizations to answer the questions about which activities tended to be longest and when.
+            if (activity !== "unknown" && activity !== "") {
+                if (activityCounts[activity] === undefined) {
+                    activityCounts[activity] = 0;
+                }
+
+                activityCounts[activity]++;
+            }
+        }
+    }
+
+    // Sort activities from most common to least common
+    let sortedActivities = Object.entries(activityCounts);
+
+    sortedActivities.sort(function(a, b) {
+        return b[1] - a[1];
+    });
+
+    // Print the results automatically
+    console.table(sortedActivities);
+
+    // Update the webpage
+    document.getElementById("numberActivities").innerText =
+        sortedActivities.length;
+
+    document.getElementById("firstMost").innerText =
+        sortedActivities[0][0];
+
+    document.getElementById("secondMost").innerText =
+        sortedActivities[1][0];
+
+    document.getElementById("thirdMost").innerText =
+        sortedActivities[2][0];
+
+	let graphData = sortedActivities.map(function(activity) {
+        return {
+            activityType: activity[0],
+            count: activity[1]
+        };
+    });
+
+    // Graph showing the number of tweets for each activity
+    activity_vis_spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "description": "A graph of the number of Tweets containing each type of activity.",
+        "data": {
+            "values": graphData
+        },
+        "mark": "bar",
+        "encoding": {
+            "x": {
+                "field": "activityType",
+                "type": "nominal",
+                "sort": "-y",
+                "title": "Activity Type"
+            },
+            "y": {
+                "field": "count",
+                "type": "quantitative",
+                "title": "Number of Tweets"
+            }
+        }
+    };
+
+    vegaEmbed('#activityVis', activity_vis_spec, {actions:false});
 }
 
 //Wait for the DOM to load
