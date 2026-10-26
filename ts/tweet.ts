@@ -108,7 +108,7 @@ class Tweet {
 }
 
     getHTMLTableRow(rowNumber:number):string {
-    //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
+    //I used ChatGPT to help me on this one
 
     // Find the link in the tweet
     let words = this.text.split(" ");
