@@ -108,7 +108,43 @@ class Tweet {
 }
 
     getHTMLTableRow(rowNumber:number):string {
-        //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
-        return "<tr></tr>";
+    //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
+
+    // Find the link in the tweet
+    let words = this.text.split(" ");
+    let link = "";
+
+    for (let word of words) {
+        if (word.startsWith("https://") || word.startsWith("http://")) {
+            link = word;
+            break;
+        }
     }
+
+    // Display the entire original tweet
+    let tweetText = this.text;
+
+    // Escape special HTML characters
+    tweetText = tweetText.replace(/&/g, "&amp;");
+    tweetText = tweetText.replace(/</g, "&lt;");
+    tweetText = tweetText.replace(/>/g, "&gt;");
+    tweetText = tweetText.replace(/"/g, "&quot;");
+    tweetText = tweetText.replace(/'/g, "&#39;");
+
+    let row = "<tr>";
+    row += "<td>" + rowNumber + "</td>";
+    row += "<td>" + this.activityType + "</td>";
+
+    if (link !== "") {
+        row += '<td><a href="' + link + '" target="_blank" rel="noopener noreferrer">';
+        row += tweetText;
+        row += "</a></td>";
+    } else {
+        row += "<td>" + tweetText + "</td>";
+    }
+
+    row += "</tr>";
+
+    return row;
+}
 }
